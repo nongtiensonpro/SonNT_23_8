@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body class="p-4">
+<div class="container">
+    <div class="card">
+        <div class="container p-2">
+            <h2>Quản lý nhân viên</h2>
+        </div>
+        <div class="card m-4">
+            <div class="card-body">
+                <div class="container p-2">
+                    Bộ lọc
+                </div>
+                <div class="container row p-2">
+                    <div class="container col">
+                        <div class="form-group">
+                            <label for="">Tìm kiếm</label>
+                            <label>
+                                <input type="text"
+                                       class="form-control" name=""  aria-describedby="helpId"
+                                       placeholder="Nhập từ khóa tìm kiếm(mã giảng viên/tên giảng viên/email">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="container col">
+                        <div class="form-group">
+                            <label for="">Trạng thái</label>
+                            <select class="form-control" name="" id="">
+                                <option selected>--Chọn trạng thái--</option>
+                                <option>Hoạt động</option>
+                                <option>Không hoạt động</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container m-2">
+            <div class="container row">
+                <div class="container col-4">
+                    Danh sách nhân viên
+                </div>
+                <div class="container col-6">
+                    <button type="button" class="btn btn-primary">Import Nhân Viên</button>
+                    <a class="btn btn-primary" href="/head-office/staffs/download-template" role="button">Download Template</a>
+                    <form action="#" th:action="@{/head-office/staffs/add}" method="post" th:object="${staffsNew}"
+                          class="modal fade" id="addStaffModal" tabindex="-1" role="dialog"
+                          aria-labelledby="addStaffModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="addStaffModalLabel">Thêm nhân viên</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="staffId">Mã nhân viên</label>
+                                            <input type="text" class="form-control" id="staffId" name="staffId"
+                                                   th:field="*{id}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="staffName">Tên nhân viên</label>
+                                            <input type="text" class="form-control" id="staffName" name="staffName"
+                                                   th:field="*{name}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="staffEmailFpt">Email FPT</label>
+                                            <input type="email" class="form-control" id="staffEmailFpt"
+                                                   name="staffEmailFpt" th:field="*{accountFpt}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="staffEmailFe">Email FE</label>
+                                            <input type="email" class="form-control" id="staffEmailFe"
+                                                   name="staffEmailFe" th:field="*{accountFe}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="staffStatus">Trạng thái</label>
+                                            <select class="form-control" id="staffStatus" name="staffStatus"
+                                                    th:field="*{status}">
+                                                <option th:value="1">Hoạt động</option>
+                                                <option th:value="0">Không hoạt động</option>
+                                            </select>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                    <button type="submit" class="btn btn-primary">Lưu</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Add this line to the "Thêm nhân viên" button to open the modal -->
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addStaffModal">Thêm
+                        nhân viên
+                    </button>
+                    <button type="button" class="btn btn-primary">Xem lịch sử import</button>
+                </div>
+            </div>
+            <div class="container p-2">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Mã nhân viên</th>
+                        <th>Tên nhân viên</th>
+                        <th>Email FPT</th>
+                        <th>Email FE</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="staffMeo, index : ${staffsok}">
+                        <td th:text="${index.count}"></td>
+                        <td th:text="${staffMeo.id}"></td>
+                        <td th:text="${staffMeo.name}"></td>
+                        <td th:text="${staffMeo.accountFpt}"></td>
+                        <td th:text="${staffMeo.accountFe}"></td>
+                        <td th:text="${staffMeo.status == 1 ? 'Hoạt động' : 'Không hoạt động'}"></td>
+                        <td>
+                            <a class="btn btn-primary" data-toggle="modal"
+                               th:attr="data-target='#editStaffModal' + ${staffMeo.id}">🪶</a>
+                            <!-- Edit Staff Modal -->
+                            <div class="modal fade" th:id="'editStaffModal' + ${staffMeo.id}" tabindex="-1"
+                                 role="dialog"
+                                 aria-labelledby="editStaffModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editStaffModalLabel">Chỉnh sửa nhân viên</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form th:action="@{/head-office/staffs/edit}" th:object="${staffEdit}"
+                                              method="post">
+                                            <div class="modal-body">
+                                                <input type="hidden" name="id" th:value="${staffMeo.id}">
+                                                <div class="form-group">
+                                                    <label for="editStaffName">Tên nhân viên</label>
+                                                    <input type="text" class="form-control" id="editStaffName" required
+                                                           name="name" th:value="${staffMeo.name}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="editStaffEmailFpt">Email FPT</label>
+                                                    <input type="email" class="form-control" id="editStaffEmailFpt"
+                                                           required name="accountFpt" th:value="${staffMeo.accountFpt}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="editStaffEmailFe">Email FE</label>
+                                                    <input type="email" class="form-control" id="editStaffEmailFe"
+                                                           required name="accountFe" th:value="${staffMeo.accountFe}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="editStaffStatus">Trạng thái</label>
+                                                    <select class="form-control" id="editStaffStatus" name="status">
+                                                        <option value="1" th:selected="${staffMeo.status == 1}">Hoạt
+                                                            động
+                                                        </option>
+                                                        <option value="0" th:selected="${staffMeo.status == 0}">Không
+                                                            hoạt động
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                    Đóng
+                                                </button>
+                                                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-danger" data-toggle="modal"
+                                    th:attr="data-target='#deleteConfirmModal' + ${staffMeo.id}">🗑️
+                            </button>
+
+                            <div class="modal fade" th:id="'deleteConfirmModal' + ${staffMeo.id}" tabindex="-1"
+                                 role="dialog" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteConfirmModalLabel">Xác nhận xóa</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h3><b>Xác nhận thay đổi trạng thái ?</b></h3>
+                                            Bạn có muốn chắc chắn thay đổi trạng thái nhân viên <b
+                                                th:text="${staffMeo.getName()}"></b> không ?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy
+                                            </button>
+                                            <a th:href="@{/head-office/staffs/status(id=${staffMeo.id})}"
+                                               class="btn btn-danger">Xác nhận</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a th:href="@{/head-office/staffs/detail(id=${staffMeo.id})}" class="btn btn-success">👁️</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+</html>
